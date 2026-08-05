@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Player from "../entities/Player";
 
 export default class WorldScene extends Phaser.Scene {
     constructor() {
@@ -14,22 +15,9 @@ export default class WorldScene extends Phaser.Scene {
         // Camera bounds
         this.cameras.main.setBounds(0, 0, 2000, 2000);
 
-        // Create player
-        this.player = this.add.rectangle(1000, 1000, 32, 32, 0x3498db);
+        this.player = new Player(this, 1000, 1000);
 
-        this.physics.add.existing(this.player);
-
-        this.player.body.setCollideWorldBounds(true);
-
-        // Camera follows player
-        this.cameras.main.startFollow(this.player, true);
-
-        this.cursors = this.input.keyboard.addKeys({
-            up: Phaser.Input.Keyboard.KeyCodes.W,
-            down: Phaser.Input.Keyboard.KeyCodes.S,
-            left: Phaser.Input.Keyboard.KeyCodes.A,
-            right: Phaser.Input.Keyboard.KeyCodes.D,
-        });
+        this.cameras.main.startFollow(this.player.sprite, true);
 
         // Optional: Draw a grid so we can see the camera move
         const graphics = this.add.graphics();
@@ -49,24 +37,6 @@ export default class WorldScene extends Phaser.Scene {
     }
 
     update() {
-        const speed = 200;
-
-        this.player.body.setVelocity(0);
-
-        if (this.cursors.left.isDown) {
-            this.player.body.setVelocityX(-speed);
-        }
-
-        if (this.cursors.right.isDown) {
-            this.player.body.setVelocityX(speed);
-        }
-
-        if (this.cursors.up.isDown) {
-            this.player.body.setVelocityY(-speed);
-        }
-
-        if (this.cursors.down.isDown) {
-            this.player.body.setVelocityY(speed);
-        }
+        this.player.update();
     }
 }

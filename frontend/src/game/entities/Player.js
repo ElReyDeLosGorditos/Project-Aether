@@ -1,18 +1,42 @@
 import Phaser from "phaser";
 
-export default class Player extends Phaser.Physics.Arcade.Sprite {
+export default class Player {
     constructor(scene, x, y) {
-        super(scene, x, y, null);
+        this.scene = scene;
 
-        scene.add.existing(this);
-        scene.physics.add.existing(this);
+        this.sprite = scene.add.rectangle(x, y, 32, 32, 0x3498db);
 
-        this.body.setCollideWorldBounds(true);
+        scene.physics.add.existing(this.sprite);
 
-        this.setSize(32, 32);
+        this.sprite.body.setCollideWorldBounds(true);
+
+        this.speed = 200;
+
+        this.keys = scene.input.keyboard.addKeys({
+            up: Phaser.Input.Keyboard.KeyCodes.W,
+            down: Phaser.Input.Keyboard.KeyCodes.S,
+            left: Phaser.Input.Keyboard.KeyCodes.A,
+            right: Phaser.Input.Keyboard.KeyCodes.D,
+        });
     }
 
-    preUpdate(time, delta) {
-        super.preUpdate(time, delta);
+    update() {
+        this.sprite.body.setVelocity(0);
+
+        if (this.keys.left.isDown) {
+            this.sprite.body.setVelocityX(-this.speed);
+        }
+
+        if (this.keys.right.isDown) {
+            this.sprite.body.setVelocityX(this.speed);
+        }
+
+        if (this.keys.up.isDown) {
+            this.sprite.body.setVelocityY(-this.speed);
+        }
+
+        if (this.keys.down.isDown) {
+            this.sprite.body.setVelocityY(this.speed);
+        }
     }
 }
