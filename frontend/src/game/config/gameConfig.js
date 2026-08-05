@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import BootScene from "../scenes/BootScene";
+import PreloadScene from "../scenes/PreloadScene";
+import WorldScene from "../scenes/WorldScene";
 
 export const gameConfig = {
     type: Phaser.AUTO,
@@ -11,7 +13,11 @@ export const gameConfig = {
 
     backgroundColor: "#000000",
 
-    scene: [BootScene],
+    scene: [
+    BootScene,
+    PreloadScene,
+    WorldScene
+    ],
 
     physics: {
         default: "arcade",
