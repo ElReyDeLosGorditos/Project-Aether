@@ -2,38 +2,125 @@ import Phaser from "phaser";
 import Player from "../entities/Player";
 
 export default class WorldScene extends Phaser.Scene {
+
     constructor() {
         super("WorldScene");
     }
 
     create() {
-        this.cameras.main.setBackgroundColor("#2E8B57");
+        const map = this.make.tilemap({
+            key: "map2",
+        });
 
-        // World bounds
-        this.physics.world.setBounds(0, 0, 2000, 2000);
+        const tilesetmap2 = map.addTilesetImage(
+            "Tilemap_color2",
+            "tilesetmap2"
+        );
 
-        // Camera bounds
-        this.cameras.main.setBounds(0, 0, 2000, 2000);
+        const water = map.addTilesetImage(
+            "Water",
+            "water"
+        );
 
-        this.player = new Player(this, 1000, 1000);
+        const bhouse1 = map.addTilesetImage(
+            "House1",
+            "bhouse1"
+        );
 
-        this.cameras.main.startFollow(this.player.sprite, true);
+        const yhouse2 = map.addTilesetImage(
+            "House2",
+            "yhouse2"
+        );
 
-        // Optional: Draw a grid so we can see the camera move
-        const graphics = this.add.graphics();
-        graphics.lineStyle(1, 0x3b5f2b);
+        map.createLayer("Map Layer", [
+            tilesetmap2,
+            water,
+        ]);
 
-        for (let x = 0; x <= 2000; x += 100) {
-            graphics.moveTo(x, 0);
-            graphics.lineTo(x, 2000);
-        }
+        map.createLayer("Top Layer", [
+            bhouse1,
+            yhouse2,
+        ]);
 
-        for (let y = 0; y <= 2000; y += 100) {
-            graphics.moveTo(0, y);
-            graphics.lineTo(2000, y);
-        }
+        this.physics.world.setBounds(
+            0,
+            0,
+            map.widthInPixels,
+            map.heightInPixels
+        );
 
-        graphics.strokePath();
+        this.cameras.main.setBounds(
+            0,
+            0,
+            map.widthInPixels,
+            map.heightInPixels
+        );
+
+        this.anims.create({
+            key: "warrior_idle",
+            frames: this.anims.generateFrameNumbers("warrior_idle", {
+                start: 0,
+                end: 7,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        });
+
+        this.anims.create({
+            key: "warrior_run",
+            frames: this.anims.generateFrameNumbers("warrior_run", {
+                start: 0,
+                end: 5,
+            }),
+            frameRate: 10,
+            repeat: -1,
+        });
+
+        this.anims.create({
+            key: "warrior_guard",
+            frames: this.anims.generateFrameNumbers("warrior_guard", {
+                start: 0,
+                end: 5,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        });
+
+        this.anims.create({
+            key: "warrior_attack1",
+            frames: this.anims.generateFrameNumbers("warrior_attack1", {
+                start: 0,
+                end: 3,
+            }),
+            frameRate: 12,
+            repeat: 0,
+        });
+
+        this.anims.create({
+            key: "warrior_attack2",
+            frames: this.anims.generateFrameNumbers("warrior_attack2", {
+                start: 0,
+                end: 3,
+            }),
+            frameRate: 12,
+            repeat: 0,
+        });
+
+        // Important this is below the animations!!
+        this.player = new Player(this, 200, 200);
+        
+        // Camera follows player smoothly
+        this.cameras.main.startFollow(
+            this.player.sprite,
+            true,
+            0.1,
+            0.1
+        );
+
+        // Zoom out a bit
+        this.cameras.main.setZoom(1);
+
+
     }
 
     update() {
