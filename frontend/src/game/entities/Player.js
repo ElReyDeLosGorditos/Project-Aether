@@ -4,16 +4,33 @@ export default class Player {
     constructor(scene, x, y) {
         this.scene = scene;
 
-        this.sprite = scene.physics.add.sprite(x, y, "warrior_idle");
+        // =========================
+        // PLAYER
+        // =========================
+        this.sprite = scene.physics.add.sprite(
+            x,
+            y,
+            "warrior_idle"
+        );
 
         this.sprite.play("warrior_idle");
-
         this.sprite.setScale(0.5);
 
-        scene.physics.add.existing(this.sprite);
+        // =========================
+        // PLAYER COLLISION BODY
+        // =========================
+        this.sprite.body.setSize(40, 26);
+        this.sprite.body.setOffset(74, 100);
 
         this.sprite.body.setCollideWorldBounds(true);
 
+        // DEBUG
+        this.sprite.body.debugShowBody = true;
+        this.sprite.body.debugBodyColor = 0x00ff00;
+
+        // =========================
+        // MOVEMENT
+        // =========================
         this.speed = 200;
 
         this.keys = scene.input.keyboard.addKeys({
@@ -33,7 +50,6 @@ export default class Player {
             this.sprite.body.setVelocityX(-this.speed);
             moving = true;
 
-            // Face left
             this.sprite.setFlipX(true);
         }
 
@@ -41,7 +57,6 @@ export default class Player {
             this.sprite.body.setVelocityX(this.speed);
             moving = true;
 
-            // Face right
             this.sprite.setFlipX(false);
         }
 
